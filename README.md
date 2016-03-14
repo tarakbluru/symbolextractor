@@ -1,15 +1,15 @@
 # symbolextractor
 
-Extracts symbols from the set of Data files
+Extracts symbols from the set of Data files. The assumption is the rar files are already converted into csv files.
 
 Build:
 gcc -o symextract.exe sym_extractor.c
 
 To Run:
 
-1. run the command 
-   sym datafolder
-      
+1. run the command
+   sym <datafolder>
+
    eg.- sym f:\Tarak\Market\gfdl\ieod
 
   This step creates 2 files:    
