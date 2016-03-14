@@ -12,9 +12,9 @@ To Run:
       
    eg.- sym f:\Tarak\Market\gfdl\ieod
 
-This step creates 2 files:    
- inputfolder.txt - has path to the data files folder
- inputfiles.txt - has list of files
+  This step creates 2 files:    
+   inputfolder.txt - has path to the data files folder
+   inputfiles.txt - has list of files
 2. update - inputfiles.txt - to select the files.
 3. symbol.txt - has symbols that needs to be extracted
 4. run the command 
