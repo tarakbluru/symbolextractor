@@ -35,43 +35,43 @@ Assumption:  RAR files are already converted into .csv files.
 #include <assert.h>
 #include <string.h>
 
-#define INPUT_FILES 	"inputfiles.txt"
-#define SYMBOL 			"symbol.txt"
-#define INPUT_FOLDER 	"inputfolder.txt"
+#define INPUT_FILES     "inputfiles.txt"
+#define SYMBOL          "symbol.txt"
+#define INPUT_FOLDER    "inputfolder.txt"
 #define BUF_SIZE        (1024u)
 
 int main ( void )
 {
-	char folder [BUF_SIZE];
-	char tmpname [BUF_SIZE];
-	char filelist[BUF_SIZE];
-	char outfile [BUF_SIZE];
-	char symname [BUF_SIZE];
-	char data    [BUF_SIZE];
+    char folder [BUF_SIZE];
+    char tmpname [BUF_SIZE];
+    char filelist[BUF_SIZE];
+    char outfile [BUF_SIZE];
+    char symname [BUF_SIZE];
+    char data    [BUF_SIZE];
     int retval = 0;
     int header;
-	
-	FILE* finputfiles = NULL; 
-	FILE* fsymbolfile = NULL;
-	FILE* ffolderfile = NULL;
-	FILE* fout = NULL;
     
-    /*Open the input files */
-	finputfiles = fopen (INPUT_FILES, "r");
-	if(finputfiles == NULL) {
-		printf ("Not able to open %s ", INPUT_FILES);
-		goto BAIL_OUT;
-	}
-    fsymbolfile = fopen (SYMBOL, "r");
-	if(fsymbolfile  == NULL) {
-		printf ("Not able to open %s ", SYMBOL);
-		goto BAIL_OUT;
-	}
+    FILE* finputfiles = NULL; 
+    FILE* fsymbolfile = NULL;
+    FILE* ffolderfile = NULL;
+    FILE* fout = NULL;
+    
+        /*Open the input files */
+    finputfiles = fopen (INPUT_FILES, "r");
+    if(finputfiles == NULL) {
+        printf ("Not able to open %s ", INPUT_FILES);
+        goto BAIL_OUT;
+    }
+        fsymbolfile = fopen (SYMBOL, "r");
+    if(fsymbolfile  == NULL) {
+        printf ("Not able to open %s ", SYMBOL);
+        goto BAIL_OUT;
+    }
     ffolderfile = fopen (INPUT_FOLDER, "r");
-	if (ffolderfile == NULL) {
-		printf ("Not able to open %s ", INPUT_FOLDER);
-		goto BAIL_OUT;
-	}
+    if (ffolderfile == NULL) {
+        printf ("Not able to open %s ", INPUT_FOLDER);
+        goto BAIL_OUT;
+    }
 
     /*Initialize the buffers */
     memset(folder,0x0,sizeof(folder));
@@ -81,72 +81,72 @@ int main ( void )
     memset(symname, 0x0, sizeof(symname));
     memset(data, 0x0, sizeof(data));
     
-	if ( fscanf(ffolderfile,"%s",folder) != EOF ) {
-		strcat(folder,"\\");
-	}
-	fclose(ffolderfile); ffolderfile = NULL;
-	/*
+    if ( fscanf(ffolderfile,"%s",folder) != EOF ) {
+        strcat(folder,"\\");
+    }
+    fclose(ffolderfile); ffolderfile = NULL;
+    /*
      *   for all symbols
      *       open the outputfile
      *       Add the header
      *       go thru each of input file
      *       if the line contains symbol then write the line
     */
-	while (!feof(fsymbolfile)) {
-		if (fscanf(fsymbolfile, "%s", symname) != EOF ){
-			strcpy (outfile, symname);
-			strcat (outfile, ".csv");
-			strcat (symname, ",");  // Add comma to search pattern NIFTY-I, this
+    while (!feof(fsymbolfile)) {
+        if (fscanf(fsymbolfile, "%s", symname) != EOF ){
+            strcpy (outfile, symname);
+            strcat (outfile, ".csv");
+            strcat (symname, ",");  // Add comma to search pattern NIFTY-I, this
                                     // avoids NIFTY-II and NIFTY-III
-			fout = fopen (outfile,"w");
-			printf("Extracting symbol :: %s into %s \n", symname, outfile);
-			if (fout == NULL) {
-				printf("Not able to open %s \n", outfile);
-				goto BAIL_OUT;
-			}
+            fout = fopen (outfile,"w");
+            printf("Extracting symbol :: %s into %s \n", symname, outfile);
+            if (fout == NULL) {
+                printf("Not able to open %s \n", outfile);
+                goto BAIL_OUT;
+            }
             header = 0;
-			while (!feof(finputfiles)){
-				if (fscanf(finputfiles, "%s", filelist) != EOF) {
-					FILE* fin;
+            while (!feof(finputfiles)){
+                if (fscanf(finputfiles, "%s", filelist) != EOF) {
+                    FILE* fin;
                     strcpy (tmpname, folder);
-					strcat (tmpname, filelist);
+                    strcat (tmpname, filelist);
                     fin = fopen(tmpname, "r");
-					printf ("Opening the file %s \n", tmpname);
-					if (fin == NULL) {
-						printf("Not able to open %s \n", tmpname);
-						goto BAIL_OUT;
-					}
-					while (!feof(fin)) {
-						fgets(data, BUF_SIZE, fin);
+                    printf ("Opening the file %s \n", tmpname);
+                    if (fin == NULL) {
+                        printf("Not able to open %s \n", tmpname);
+                        goto BAIL_OUT;
+                    }
+                    while (!feof(fin)) {
+                        fgets(data, BUF_SIZE, fin);
                         if (header == 0) {
                             fwrite(data, strlen(data), 1, fout);
                             header = 1;
                         }
-						if (strstr (data, symname) == data)	{
-							fwrite(data, strlen(data), 1, fout);
-						}
-					}
-					fclose(fin);
-				}
-			}
-			fclose (fout);
+                        if (strstr (data, symname) == data) {
+                            fwrite(data, strlen(data), 1, fout);
+                        }
+                    }
+                    fclose(fin);
+                }
+            }
+            fclose (fout);
             rewind(finputfiles);
-		}
-	}
+        }
+    }
 
 BAIL_OUT:
-	if(finputfiles != NULL) {
-		fclose (finputfiles);
+    if(finputfiles != NULL) {
+        fclose (finputfiles);
         retval = -1;
-	}
-	if(fsymbolfile  != NULL) {
-		fclose (fsymbolfile);
+    }
+    if(fsymbolfile  != NULL) {
+        fclose (fsymbolfile);
         retval = -2;
-	}
-	if (ffolderfile != NULL) {
-		fclose (ffolderfile);
+    }
+    if (ffolderfile != NULL) {
+        fclose (ffolderfile);
         retval = -3;
-	}
+    }
 
-	return retval;
+    return retval;
 }/*main*/
