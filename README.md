@@ -8,7 +8,7 @@ gcc -o symextract.exe sym_extractor.c
 To Run:
 
 1. run the command
-   sym <datafolder>
+   sym C:\datafolder
 
    eg.- sym f:\Tarak\Market\gfdl\ieod
 
