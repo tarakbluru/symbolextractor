@@ -60,17 +60,20 @@ int main ( void )
     finputfiles = fopen (INPUT_FILES, "r");
     if(finputfiles == NULL) {
         printf ("Not able to open %s ", INPUT_FILES);
+	retval = -1;
         goto BAIL_OUT;
     }
         fsymbolfile = fopen (SYMBOL, "r");
     if(fsymbolfile  == NULL) {
         printf ("Not able to open %s ", SYMBOL);
+	retval = -2;
         goto BAIL_OUT;
     }
     ffolderfile = fopen (INPUT_FOLDER, "r");
     if (ffolderfile == NULL) {
         printf ("Not able to open %s ", INPUT_FOLDER);
-        goto BAIL_OUT;
+        retval = -3;
+	goto BAIL_OUT;
     }
 
     /*Initialize the buffers */
@@ -137,15 +140,12 @@ int main ( void )
 BAIL_OUT:
     if(finputfiles != NULL) {
         fclose (finputfiles);
-        retval = -1;
     }
     if(fsymbolfile  != NULL) {
         fclose (fsymbolfile);
-        retval = -2;
     }
     if (ffolderfile != NULL) {
         fclose (ffolderfile);
-        retval = -3;
     }
 
     return retval;
