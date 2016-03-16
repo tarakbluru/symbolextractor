@@ -105,6 +105,7 @@ int main ( void )
             printf("Extracting symbol :: %s into %s \n", symname, outfile);
             if (fout == NULL) {
                 printf("Not able to open %s \n", outfile);
+		retval = -4;
                 goto BAIL_OUT;
             }
             header = 0;
@@ -117,6 +118,7 @@ int main ( void )
                     printf ("Opening the file %s \n", tmpname);
                     if (fin == NULL) {
                         printf("Not able to open %s \n", tmpname);
+			retval = -5;
                         goto BAIL_OUT;
                     }
                     while (!feof(fin)) {
