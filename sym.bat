@@ -1,3 +1,5 @@
+@echo off
+
 REM 
 REM The MIT License (MIT)
 
@@ -28,6 +30,6 @@ REM to the data files.
 REM 
 
 @echo off
-dir /OD /B %1\*.csv > inputfiles.txt
+dir /D /O:n /B %1\*.* > inputfiles.txt
 echo %1 > inputfolder.txt
 
